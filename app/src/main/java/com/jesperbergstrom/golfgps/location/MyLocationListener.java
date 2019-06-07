@@ -3,21 +3,17 @@ package com.jesperbergstrom.golfgps.location;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.widget.TextView;
 
 public class MyLocationListener implements LocationListener {
 
-    private TextView locationText;
     private double targetLat = 56.996755;
     private double targetLong = 13.254280;
 
-    public void setLocationText(TextView locationText) {
-        this.locationText = locationText;
-    }
+    // 145 meter = 453 pixels. 1 pixel = 0.32 meters
 
     @Override
     public void onLocationChanged(Location loc) {
-        locationText.setText(String.valueOf(calculateDistance(loc.getLatitude(), loc.getLongitude())));
+        //locationText.setText(String.valueOf(calculateDistance(loc.getLatitude(), loc.getLongitude())));
     }
 
     @Override
