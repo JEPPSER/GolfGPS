@@ -15,10 +15,17 @@ import android.graphics.Paint;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.jesperbergstrom.golfgps.input.ScaleListener;
 import com.jesperbergstrom.golfgps.location.MyLocationListener;
+import com.jesperbergstrom.golfgps.view.CanvasView;
 
 /*
  * TODO:
@@ -30,36 +37,25 @@ import com.jesperbergstrom.golfgps.location.MyLocationListener;
 
 public class MainActivity extends Activity {
 
-    private Bitmap currentHole;
-    private Canvas canvas;
-    private double imageScale = 0.2;
+    public ImageView imageView;
+
+    public Bitmap currentHole;
+    public CanvasView canvasView;
+    public double imageScale = 0.2;
+    public double x = 0;
+    public double y = 0;
+    public ScaleGestureDetector sgd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        imageView = findViewById(R.id.imageView);
+        currentHole = BitmapFactory.decodeResource(getResources(), R.drawable.nine);
 
-        SurfaceView surface = findViewById(R.id.surface);
-        surface.getHolder().addCallback(new SurfaceHolder.Callback() {
-
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                canvas = holder.lockCanvas();
-
-                currentHole = BitmapFactory.decodeResource(getResources(), R.drawable.nine);
-                drawCurrentHole(0, 0);
-
-                holder.unlockCanvasAndPost(canvas);
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            }
-        });
+        sgd = new ScaleGestureDetector(this, new ScaleListener(this));
+        canvasView = new CanvasView(this, imageView);
+        canvasView.drawCurrentHole();
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         MyLocationListener locationListener = new MyLocationListener();
@@ -78,25 +74,9 @@ public class MainActivity extends Activity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
-    private void drawCurrentHole(int x, int y) {
-        Paint p = new Paint();
-        p.setColor(Color.RED);
-        canvas.drawBitmap(scaleBitmap(currentHole, currentHole.getWidth() * imageScale, currentHole.getHeight() * imageScale), x, y, p);
-    }
-
-    private Bitmap scaleBitmap(Bitmap bitmap, double newWidth, double newHeight) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, false);
-        bitmap.recycle();
-        return resizedBitmap;
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        sgd.onTouchEvent(event);
+        return true;
     }
 }
