@@ -29,7 +29,7 @@ import com.jesperbergstrom.golfgps.view.CanvasView;
 
 /*
  * TODO:
- * - Zooming and panning image
+ * - Zooming and panning image (Work on scaling image)
  * - Load all holes and their info
  * - Display mid-green location on hole
  * - Display current player position
@@ -54,8 +54,6 @@ public class MainActivity extends Activity {
         currentHole = BitmapFactory.decodeResource(getResources(), R.drawable.nine);
 
         sgd = new ScaleGestureDetector(this, new ScaleListener(this));
-        canvasView = new CanvasView(this, imageView);
-        canvasView.drawCurrentHole();
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         MyLocationListener locationListener = new MyLocationListener();
@@ -72,6 +70,13 @@ public class MainActivity extends Activity {
         }
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        canvasView = new CanvasView(this, imageView);
+        canvasView.drawCurrentHole();
     }
 
     @Override
