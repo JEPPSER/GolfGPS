@@ -21,6 +21,8 @@ public class CanvasView {
     private Bitmap scaledImage;
     private int width;
     private int height;
+    private double upperScale;
+    private double lowerScale;
     private Bitmap b;
 
     private static final int NONE = 0;
@@ -40,6 +42,16 @@ public class CanvasView {
         height = imageView.getHeight();
         b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(b);
+
+        if (main.currentHole.getWidth() >= main.currentHole.getHeight()) {
+            main.imageScale = (double) imageView.getWidth() / (double) main.currentHole.getWidth();
+        } else {
+            main.imageScale = (double) imageView.getHeight() / (double) main.currentHole.getHeight();
+        }
+
+        lowerScale = main.imageScale;
+        upperScale = main.imageScale * 2;
+
         scaleImage();
         this.imageView = imageView;
         imageView.setImageBitmap(b);
@@ -74,10 +86,10 @@ public class CanvasView {
                             if (newDist > 10f) {
                                 float scale = newDist / oldDist;
                                 main.imageScale *= scale;
-                                if (main.imageScale < 0.2) {
-                                    main.imageScale = 0.2;
-                                } else if (main.imageScale > 0.8) {
-                                    main.imageScale = 0.8;
+                                if (main.imageScale < lowerScale) {
+                                    main.imageScale = lowerScale;
+                                } else if (main.imageScale > upperScale) {
+                                    main.imageScale = upperScale;
                                 }
                                 scaleImage();
                                 adjustImagePosition();
@@ -110,15 +122,15 @@ public class CanvasView {
     }
 
     private void adjustImagePosition() {
-        if (main.x < -scaledImage.getWidth() + 5) {
-            main.x = -scaledImage.getWidth() + 5;
-        } else if (main.x > width - 5) {
-            main.x = width - 5;
+        if (main.x < -scaledImage.getWidth() + 200) {
+            main.x = -scaledImage.getWidth() + 200;
+        } else if (main.x > width - 200) {
+            main.x = width - 200;
         }
-        if (main.y < -scaledImage.getHeight() + 5) {
-            main.y = -scaledImage.getHeight() + 5;
-        } else if (main.y > height - 5) {
-            main.y = height - 5;
+        if (main.y < -scaledImage.getHeight() + 200) {
+            main.y = -scaledImage.getHeight() + 200;
+        } else if (main.y > height - 200) {
+            main.y = height - 200;
         }
     }
 

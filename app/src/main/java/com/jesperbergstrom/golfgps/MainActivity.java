@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
@@ -13,12 +14,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.jesperbergstrom.golfgps.entities.Course;
 import com.jesperbergstrom.golfgps.location.MyLocationListener;
 import com.jesperbergstrom.golfgps.view.CanvasView;
 
+import java.io.IOException;
+
 /*
  * TODO:
- * - Load all holes and their info
  * - Display mid-green location on hole
  * - Display current player position
  */
@@ -29,7 +32,7 @@ public class MainActivity extends Activity {
 
     public Bitmap currentHole;
     public CanvasView canvasView;
-    public double imageScale = 0.2;
+    public double imageScale = 1;
     public int imageWidth;
     public int imageHeight;
     public int x = 0;
@@ -40,9 +43,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.imageView);
-        currentHole = BitmapFactory.decodeResource(getResources(), R.drawable.nine);
-        imageWidth = currentHole.getWidth();
-        imageHeight = currentHole.getHeight();
+        AssetManager assetManager = getAssets();
+
+        try {
+            Course course = new Course("rydo", assetManager);
+            currentHole = BitmapFactory.decodeStream(assetManager.open("rydo/16.png"));
+            imageWidth = currentHole.getWidth();
+            imageHeight = currentHole.getHeight();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         MyLocationListener locationListener = new MyLocationListener();
