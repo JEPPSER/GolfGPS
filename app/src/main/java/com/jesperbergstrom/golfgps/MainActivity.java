@@ -22,13 +22,14 @@ import java.io.IOException;
 
 /*
  * TODO:
- * - Display mid-green location on hole
  * - Display current player position
  */
 
 public class MainActivity extends Activity {
 
     public ImageView imageView;
+
+    public Course course;
 
     public Bitmap currentHole;
     public CanvasView canvasView;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
     public int imageHeight;
     public int x = 0;
     public int y = 0;
+    public int currentHoleNumber = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,8 @@ public class MainActivity extends Activity {
         AssetManager assetManager = getAssets();
 
         try {
-            Course course = new Course("rydo", assetManager);
-            currentHole = BitmapFactory.decodeStream(assetManager.open("rydo/16.png"));
+            course = new Course("rydo", assetManager);
+            currentHole = BitmapFactory.decodeStream(assetManager.open(course.name + "/" + currentHoleNumber + ".png"));
             imageWidth = currentHole.getWidth();
             imageHeight = currentHole.getHeight();
         } catch (IOException e) {

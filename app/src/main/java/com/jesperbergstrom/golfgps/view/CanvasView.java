@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.jesperbergstrom.golfgps.MainActivity;
+import com.jesperbergstrom.golfgps.entities.Hole;
 
 public class CanvasView {
 
@@ -25,6 +26,9 @@ public class CanvasView {
     private double lowerScale;
     private Bitmap b;
 
+    private Paint red;
+    private Paint black;
+
     private static final int NONE = 0;
     private static final int DRAG = 1;
     private static final int ZOOM = 2;
@@ -37,6 +41,11 @@ public class CanvasView {
 
     @SuppressLint("ClickableViewAccessibility")
     public CanvasView(Context context, ImageView imageView) {
+        red = new Paint();
+        red.setColor(Color.RED);
+        black = new Paint();
+        black.setColor(Color.BLACK);
+
         main = (MainActivity) context;
         width = imageView.getWidth();
         height = imageView.getHeight();
@@ -104,8 +113,10 @@ public class CanvasView {
     }
 
     public void drawCurrentHole() {
-        canvas.drawRect(0, 0, width, height, new Paint(Color.BLACK));
+        canvas.drawRect(0, 0, width, height, black);
         canvas.drawBitmap(scaledImage, main.x, main.y, null);
+        Hole h = main.course.holes.get(main.currentHoleNumber - 1);
+        canvas.drawCircle((float) (h.midPixelX * main.imageScale + main.x), (float) (h.midPixelY * main.imageScale + main.y), 10, red);
         imageView.setImageBitmap(b);
     }
 

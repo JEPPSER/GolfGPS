@@ -18,10 +18,6 @@ public class Course {
         holes = new ArrayList<Hole>();
         name = courseDirectory;
         loadHoles(courseDirectory);
-
-        for (int i = 0; i < holes.size(); i++) {
-            System.out.println(holes.get(i).midCoor.latitude + ", " + holes.get(i).midCoor.longitude);
-        }
     }
 
     private void loadHoles(String dir) {
