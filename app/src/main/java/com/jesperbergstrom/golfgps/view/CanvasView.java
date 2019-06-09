@@ -18,6 +18,7 @@ public class CanvasView {
     private MainActivity main;
     private Canvas canvas;
     private ImageView imageView;
+    private Bitmap scaledImage;
     private int width;
     private int height;
     private Bitmap b;
@@ -39,6 +40,7 @@ public class CanvasView {
         height = imageView.getHeight();
         b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(b);
+        scaleImage();
         this.imageView = imageView;
         imageView.setImageBitmap(b);
 
@@ -47,7 +49,6 @@ public class CanvasView {
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
-                        System.out.println(event.getX() + ", " + event.getY());
                         startMove.set(event.getX(), event.getY());
                         startImage.set(main.x, main.y);
                         mode = DRAG;
@@ -67,6 +68,7 @@ public class CanvasView {
                         if (mode == DRAG) {
                             main.x = (int) (startImage.x + event.getX() - startMove.x);
                             main.y = (int) (startImage.y + event.getY() - startMove.y);
+                            adjustImagePosition();
                         } else if (mode == ZOOM) {
                             float newDist = spacing(event);
                             if (newDist > 10f) {
@@ -77,6 +79,8 @@ public class CanvasView {
                                 } else if (main.imageScale > 0.8) {
                                     main.imageScale = 0.8;
                                 }
+                                scaleImage();
+                                adjustImagePosition();
                             }
                         }
                         drawCurrentHole();
@@ -89,10 +93,7 @@ public class CanvasView {
 
     public void drawCurrentHole() {
         canvas.drawRect(0, 0, width, height, new Paint(Color.BLACK));
-        int scaledWidth = (int) (main.currentHole.getWidth() * main.imageScale);
-        int scaledHeight = (int) (main.currentHole.getHeight() * main.imageScale);
-        Bitmap bitmap = Bitmap.createScaledBitmap(main.currentHole, scaledWidth, scaledHeight, true);
-        canvas.drawBitmap(bitmap, main.x, main.y, null);
+        canvas.drawBitmap(scaledImage, main.x, main.y, null);
         imageView.setImageBitmap(b);
     }
 
@@ -106,5 +107,22 @@ public class CanvasView {
         float x = event.getX(0) + event.getX(1);
         float y = event.getY(0) + event.getY(1);
         point.set(x / 2, y / 2);
+    }
+
+    private void adjustImagePosition() {
+        if (main.x < -scaledImage.getWidth() + 5) {
+            main.x = -scaledImage.getWidth() + 5;
+        } else if (main.x > width - 5) {
+            main.x = width - 5;
+        }
+        if (main.y < -scaledImage.getHeight() + 5) {
+            main.y = -scaledImage.getHeight() + 5;
+        } else if (main.y > height - 5) {
+            main.y = height - 5;
+        }
+    }
+
+    private void scaleImage() {
+        scaledImage = Bitmap.createScaledBitmap(main.currentHole, (int) (main.imageWidth * main.imageScale), (int) (main.imageHeight * main.imageScale), true);
     }
 }

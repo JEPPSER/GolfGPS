@@ -18,7 +18,6 @@ import com.jesperbergstrom.golfgps.view.CanvasView;
 
 /*
  * TODO:
- * - Improve scaling (using canvas)
  * - Load all holes and their info
  * - Display mid-green location on hole
  * - Display current player position
@@ -31,6 +30,8 @@ public class MainActivity extends Activity {
     public Bitmap currentHole;
     public CanvasView canvasView;
     public double imageScale = 0.2;
+    public int imageWidth;
+    public int imageHeight;
     public int x = 0;
     public int y = 0;
 
@@ -40,6 +41,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.imageView);
         currentHole = BitmapFactory.decodeResource(getResources(), R.drawable.nine);
+        imageWidth = currentHole.getWidth();
+        imageHeight = currentHole.getHeight();
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         MyLocationListener locationListener = new MyLocationListener();
