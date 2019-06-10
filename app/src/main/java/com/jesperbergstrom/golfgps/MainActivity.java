@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jesperbergstrom.golfgps.entities.Course;
+import com.jesperbergstrom.golfgps.entities.Hole;
 import com.jesperbergstrom.golfgps.location.MyLocationListener;
 import com.jesperbergstrom.golfgps.view.CanvasView;
 
@@ -25,7 +26,6 @@ import java.io.IOException;
 
 /*
  * TODO:
- * - Displaying distances
  * - Display current player position
  */
 
@@ -35,6 +35,9 @@ public class MainActivity extends Activity {
     public Button prevBtn;
     public Button nextBtn;
     public TextView holeText;
+    public TextView frontText;
+    public TextView midText;
+    public TextView backText;
 
     public Course course;
 
@@ -46,6 +49,8 @@ public class MainActivity extends Activity {
     public int imageHeight;
     public int x = 0;
     public int y = 0;
+    public double playerPosLat = 0;
+    public double playerPosLong = 0;
     public int currentHoleNumber = 1;
 
     @Override
@@ -56,11 +61,14 @@ public class MainActivity extends Activity {
         prevBtn = findViewById(R.id.prevBtn);
         nextBtn = findViewById(R.id.nextBtn);
         holeText = findViewById(R.id.holeText);
+        frontText = findViewById(R.id.frontText);
+        midText = findViewById(R.id.midText);
+        backText = findViewById(R.id.backText);
         assetManager = getAssets();
         course = new Course("rydo", assetManager);
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        MyLocationListener locationListener = new MyLocationListener();
+        MyLocationListener locationListener = new MyLocationListener(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -130,6 +138,35 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setPlayerPosition(double latitude, double longitude) {
+        playerPosLat = latitude;
+        playerPosLong = longitude;
+        Hole hole = course.holes.get(currentHoleNumber - 1);
+
+        String front = Math.round(calculateDistance(latitude, longitude, hole.frontCoor.latitude, hole.frontCoor.longitude)) + "m";
+        String mid = Math.round(calculateDistance(latitude, longitude, hole.midCoor.latitude, hole.midCoor.longitude)) + "m";
+        String back = Math.round(calculateDistance(latitude, longitude, hole.backCoor.latitude, hole.backCoor.longitude)) + "m";
+        frontText.setText(front);
+        midText.setText(mid);
+        backText.setText(back);
+    }
+
+    private double calculateDistance(double fromLat, double fromLong, double toLat, double toLong) {
+        int R = 6371000;
+        double lat1 = Math.toRadians(fromLat);
+        double lat2 = Math.toRadians(toLat);
+        double deltaLat = Math.toRadians(toLat - fromLat);
+        double deltaLong = Math.toRadians(toLong - fromLong);
+
+        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                        Math.sin(deltaLong / 2) * Math.sin(deltaLong / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double d = R * c;
+        return d;
     }
 
     @Override
