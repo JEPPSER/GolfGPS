@@ -19,11 +19,11 @@ public class CanvasView {
     private MainActivity main;
     private Canvas canvas;
     private ImageView imageView;
-    private Bitmap scaledImage;
+    public Bitmap scaledImage;
     private int width;
     private int height;
-    private double upperScale;
-    private double lowerScale;
+    public double upperScale;
+    public double lowerScale;
     private Bitmap b;
 
     private Paint red;
@@ -52,16 +52,6 @@ public class CanvasView {
         b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(b);
 
-        if (main.currentHole.getWidth() >= main.currentHole.getHeight()) {
-            main.imageScale = (double) imageView.getWidth() / (double) main.currentHole.getWidth();
-        } else {
-            main.imageScale = (double) imageView.getHeight() / (double) main.currentHole.getHeight();
-        }
-
-        lowerScale = main.imageScale;
-        upperScale = main.imageScale * 2;
-
-        scaleImage();
         this.imageView = imageView;
         imageView.setImageBitmap(b);
 
@@ -145,7 +135,7 @@ public class CanvasView {
         }
     }
 
-    private void scaleImage() {
+    public void scaleImage() {
         scaledImage = Bitmap.createScaledBitmap(main.currentHole, (int) (main.imageWidth * main.imageScale), (int) (main.imageHeight * main.imageScale), true);
     }
 }
