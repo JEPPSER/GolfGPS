@@ -2,7 +2,8 @@ package com.jesperbergstrom.golfgps.entities;
 
 public class Hole {
 
-    public double imageScale;
+    public double xScale;
+    public double yScale;
 
     public Coordinates frontCoor;
     public Coordinates midCoor;

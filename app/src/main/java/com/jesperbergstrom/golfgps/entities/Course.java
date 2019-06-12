@@ -54,9 +54,11 @@ public class Course {
             // Scan hole image info.
             inputStream = assetManager.open(name + "/" + "info.txt");
             scan = new Scanner(inputStream, "UTF-8");
-            double scale = Double.parseDouble(scan.nextLine().replace("scale=", ""));
+            double xScale = Double.parseDouble(scan.nextLine().replace("xScale=", ""));
+            double yScale = Double.parseDouble(scan.nextLine().replace("yScale=", ""));
             for(int i = 0; scan.hasNext(); i++) {
-                holes.get(i).imageScale = scale;
+                holes.get(i).xScale = xScale;
+                holes.get(i).yScale = yScale;
                 String[] pixel = scan.nextLine().split(":")[1].split(",");
                 holes.get(i).midPixelX = Double.parseDouble(pixel[0]);
                 holes.get(i).midPixelY = Double.parseDouble(pixel[1]);

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.jesperbergstrom.golfgps.MainActivity;
 import com.jesperbergstrom.golfgps.entities.Hole;
+import com.jesperbergstrom.golfgps.entities.Pixel;
 
 public class CanvasView {
 
@@ -28,6 +29,8 @@ public class CanvasView {
 
     private Paint red;
     private Paint black;
+    private Paint blue;
+    private Paint white;
 
     private static final int NONE = 0;
     private static final int DRAG = 1;
@@ -45,6 +48,10 @@ public class CanvasView {
         red.setColor(Color.RED);
         black = new Paint();
         black.setColor(Color.BLACK);
+        blue = new Paint();
+        blue.setColor(Color.BLUE);
+        white = new Paint();
+        white.setColor(Color.WHITE);
 
         main = (MainActivity) context;
         width = imageView.getWidth();
@@ -104,10 +111,47 @@ public class CanvasView {
 
     public void drawCurrentHole() {
         canvas.drawRect(0, 0, width, height, black);
-        canvas.drawBitmap(scaledImage, main.x, main.y, null);
+
         Hole h = main.course.holes.get(main.currentHoleNumber - 1);
-        canvas.drawCircle((float) (h.midPixelX * main.imageScale + main.x), (float) (h.midPixelY * main.imageScale + main.y), 10, red);
+        float holeX = (float) (h.midPixelX * main.imageScale + main.x);
+        float holeY = (float) (h.midPixelY * main.imageScale + main.y);
+
+        Pixel p = coordinatesToPixel(h, main.tempPlayerLat, main.tempPlayerLong);
+        float playerX = (float) (p.x * main.imageScale + main.x);
+        float playerY = (float) (p.y * main.imageScale + main.y);
+
+        // Draw hole image
+        canvas.drawBitmap(scaledImage, main.x, main.y, null);
+
+        // Draw line to flag
+        black.setStrokeWidth(18);
+        canvas.drawLine(playerX, playerY, holeX, holeY, black);
+        black.setStrokeWidth(1);
+        white.setStrokeWidth(10);
+        canvas.drawLine(playerX, playerY, holeX, holeY, white);
+        white.setStrokeWidth(1);
+
+        // Draw player
+        canvas.drawCircle(playerX, playerY, 44, black);
+        canvas.drawCircle(playerX, playerY, 40, white);
+        canvas.drawCircle(playerX, playerY, 30, blue);
+
+        // Draw hole/flag (mid green)
+        canvas.drawCircle(holeX, holeY, 20, red);
+        red.setStrokeWidth(10);
+        canvas.drawLine(holeX, holeY, holeX, holeY - 80, red);
+        canvas.drawLine(holeX, holeY - 80 + 5, holeX + 30, holeY - 70 + 5, red);
+        canvas.drawLine(holeX, holeY - 60 + 5, holeX + 30, holeY - 70 + 5, red);
+        canvas.drawLine(holeX, holeY - 70 + 5, holeX + 35, holeY - 70 + 5, red);
+        red.setStrokeWidth(1);
+
         imageView.setImageBitmap(b);
+    }
+
+    public Pixel coordinatesToPixel(Hole hole, double latitude, double longitude) {
+        int x = (int) (hole.midPixelX + (longitude - hole.midCoor.longitude) * hole.xScale);
+        int y = (int) (hole.midPixelY - (latitude - hole.midCoor.latitude) * hole.yScale);
+        return new Pixel(x, y);
     }
 
     private float spacing(MotionEvent event) {

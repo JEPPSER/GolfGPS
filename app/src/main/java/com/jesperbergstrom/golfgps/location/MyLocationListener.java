@@ -19,7 +19,6 @@ public class MyLocationListener implements LocationListener {
     @Override
     public void onLocationChanged(Location loc) {
         main.setPlayerPosition(loc.getLatitude(), loc.getLongitude());
-        //locationText.setText(String.valueOf(calculateDistance(loc.getLatitude(), loc.getLongitude())));
     }
 
     @Override

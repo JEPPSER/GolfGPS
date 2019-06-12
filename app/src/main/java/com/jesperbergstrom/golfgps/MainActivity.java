@@ -51,6 +51,8 @@ public class MainActivity extends Activity {
     public int y = 0;
     public double playerPosLat = 0;
     public double playerPosLong = 0;
+    public double tempPlayerLat = 56.958173;
+    public double tempPlayerLong = 13.115099;
     public int currentHoleNumber = 1;
 
     @Override
@@ -153,7 +155,7 @@ public class MainActivity extends Activity {
         backText.setText(back);
     }
 
-    private double calculateDistance(double fromLat, double fromLong, double toLat, double toLong) {
+    public double calculateDistance(double fromLat, double fromLong, double toLat, double toLong) {
         int R = 6371000;
         double lat1 = Math.toRadians(fromLat);
         double lat2 = Math.toRadians(toLat);
