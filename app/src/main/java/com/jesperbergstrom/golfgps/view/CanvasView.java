@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.jesperbergstrom.golfgps.MainActivity;
+import com.jesperbergstrom.golfgps.entities.Coordinates;
 import com.jesperbergstrom.golfgps.entities.Hole;
 import com.jesperbergstrom.golfgps.entities.Pixel;
 
@@ -116,20 +117,26 @@ public class CanvasView {
         float holeX = (float) (h.midPixelX * main.imageScale + main.x);
         float holeY = (float) (h.midPixelY * main.imageScale + main.y);
 
-        Pixel p = coordinatesToPixel(h, main.tempPlayerLat, main.tempPlayerLong);
+        Pixel p = coordinatesToPixel(h, main.playerPosLat, main.playerPosLong);
         float playerX = (float) (p.x * main.imageScale + main.x);
         float playerY = (float) (p.y * main.imageScale + main.y);
+
+        Pixel m = coordinatesToPixel(h, main.currentMarker.latitude, main.currentMarker.longitude);
+        float markerX = (float) (m.x * main.imageScale + main.x);
+        float markerY = (float) (m.y * main.imageScale + main.y);
 
         // Draw hole image
         canvas.drawBitmap(scaledImage, main.x, main.y, null);
 
-        // Draw line to flag
+        // Draw line to marker
         black.setStrokeWidth(18);
-        canvas.drawLine(playerX, playerY, holeX, holeY, black);
+        canvas.drawLine(playerX, playerY, markerX, markerY, black);
         black.setStrokeWidth(1);
         white.setStrokeWidth(10);
-        canvas.drawLine(playerX, playerY, holeX, holeY, white);
+        canvas.drawLine(playerX, playerY, markerX, markerY, white);
         white.setStrokeWidth(1);
+        canvas.drawCircle(markerX, markerY, 20, black);
+        canvas.drawCircle(markerX, markerY, 16, white);
 
         // Draw player
         canvas.drawCircle(playerX, playerY, 44, black);

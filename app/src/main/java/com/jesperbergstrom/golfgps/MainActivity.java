@@ -16,7 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
+import com.jesperbergstrom.golfgps.entities.Coordinates;
 import com.jesperbergstrom.golfgps.entities.Course;
 import com.jesperbergstrom.golfgps.entities.Hole;
 import com.jesperbergstrom.golfgps.location.MyLocationListener;
@@ -38,6 +40,8 @@ public class MainActivity extends Activity {
     public TextView frontText;
     public TextView midText;
     public TextView backText;
+    public ToggleButton markerToggle;
+    public TextView markerText;
 
     public Course course;
 
@@ -54,6 +58,7 @@ public class MainActivity extends Activity {
     public double tempPlayerLat = 56.958173;
     public double tempPlayerLong = 13.115099;
     public int currentHoleNumber = 1;
+    public Coordinates currentMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,8 @@ public class MainActivity extends Activity {
         frontText = findViewById(R.id.frontText);
         midText = findViewById(R.id.midText);
         backText = findViewById(R.id.backText);
+        markerText = findViewById(R.id.markerText);
+        markerToggle = findViewById(R.id.markerToggle);
         assetManager = getAssets();
         course = new Course("rydo", assetManager);
 
@@ -120,6 +127,14 @@ public class MainActivity extends Activity {
 
     private void changeHole() {
         try {
+            Hole h = course.holes.get(currentHoleNumber - 1);
+            //currentMarker = h.midCoor;
+
+            // TEMP!!!
+            currentMarker = new Coordinates();
+            currentMarker.latitude = 56.958589;
+            currentMarker.longitude = 13.114085;
+
             currentHole = BitmapFactory.decodeStream(assetManager.open(course.name + "/" + currentHoleNumber + ".png"));
             imageWidth = currentHole.getWidth();
             imageHeight = currentHole.getHeight();
@@ -150,9 +165,11 @@ public class MainActivity extends Activity {
         String front = Math.round(calculateDistance(latitude, longitude, hole.frontCoor.latitude, hole.frontCoor.longitude)) + "m";
         String mid = Math.round(calculateDistance(latitude, longitude, hole.midCoor.latitude, hole.midCoor.longitude)) + "m";
         String back = Math.round(calculateDistance(latitude, longitude, hole.backCoor.latitude, hole.backCoor.longitude)) + "m";
+        String marker = "Marker: " + Math.round(calculateDistance(latitude, longitude, currentMarker.latitude, currentMarker.longitude)) + "m";
         frontText.setText(front);
         midText.setText(mid);
         backText.setText(back);
+        markerText.setText(marker);
     }
 
     public double calculateDistance(double fromLat, double fromLong, double toLat, double toLong) {

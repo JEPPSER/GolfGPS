@@ -12,42 +12,68 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
-        android:orientation="horizontal"
-        android:padding="10px">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/prevBtn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="previous" />
+            android:background="#00000000"
+            android:orientation="horizontal"
+            android:padding="10px">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1">
+            <Button
+                android:id="@+id/prevBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="previous" />
 
-            <TextView
-                android:id="@+id/holeText"
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Hole 1"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp" />
-        </FrameLayout>
+                android:layout_weight="1">
 
-        <Button
-            android:id="@+id/nextBtn"
+                <TextView
+                    android:id="@+id/holeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Hole 1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/nextBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="next" />
+
+        </LinearLayout>
+
+        <ToggleButton
+            android:id="@+id/markerToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="next" />
+            android:layout_marginTop="40px"
+            android:text="ToggleButton"
+            android:textOff="Set Marker (off)"
+            android:textOn="Set Marker (on)" />
+
+        <TextView
+            android:id="@+id/markerText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:layout_weight="0"
+            android:text="Marker Distance: "
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
