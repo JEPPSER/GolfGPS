@@ -26,11 +26,6 @@ import com.jesperbergstrom.golfgps.view.CanvasView;
 
 import java.io.IOException;
 
-/*
- * TODO:
- * - Display current player position
- */
-
 public class MainActivity extends Activity {
 
     public ImageView imageView;
@@ -128,12 +123,7 @@ public class MainActivity extends Activity {
     private void changeHole() {
         try {
             Hole h = course.holes.get(currentHoleNumber - 1);
-            //currentMarker = h.midCoor;
-
-            // TEMP!!!
-            currentMarker = new Coordinates();
-            currentMarker.latitude = 56.958589;
-            currentMarker.longitude = 13.114085;
+            currentMarker = h.midCoor;
 
             currentHole = BitmapFactory.decodeStream(assetManager.open(course.name + "/" + currentHoleNumber + ".png"));
             imageWidth = currentHole.getWidth();

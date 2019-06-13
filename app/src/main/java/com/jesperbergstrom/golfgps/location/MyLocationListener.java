@@ -18,10 +18,8 @@ public class MyLocationListener implements LocationListener {
 
     @Override
     public void onLocationChanged(Location loc) {
-        //main.setPlayerPosition(loc.getLatitude(), loc.getLongitude());
-
-        // TEMP!!!
-        main.setPlayerPosition(56.958448, 13.115364);
+        main.setPlayerPosition(loc.getLatitude(), loc.getLongitude());
+        main.canvasView.drawCurrentHole();
     }
 
     @Override

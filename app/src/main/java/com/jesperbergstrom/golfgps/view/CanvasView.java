@@ -66,10 +66,16 @@ public class CanvasView {
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
+                Hole hole = main.course.holes.get(main.currentHoleNumber - 1);
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
                     case MotionEvent.ACTION_DOWN:
-                        startMove.set(event.getX(), event.getY());
-                        startImage.set(main.x, main.y);
+                        if (main.markerToggle.isChecked()) {
+                            main.currentMarker = pixelToCoordinates(hole, (event.getX() - main.x) / main.imageScale, (event.getY() - main.y) / main.imageScale);
+                        } else {
+                            startMove.set(event.getX(), event.getY());
+                            startImage.set(main.x, main.y);
+                        }
+                        drawCurrentHole();
                         mode = DRAG;
                         break;
                     case MotionEvent.ACTION_POINTER_DOWN:
@@ -85,9 +91,13 @@ public class CanvasView {
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (mode == DRAG) {
-                            main.x = (int) (startImage.x + event.getX() - startMove.x);
-                            main.y = (int) (startImage.y + event.getY() - startMove.y);
-                            adjustImagePosition();
+                            if (main.markerToggle.isChecked()) {
+                                main.currentMarker = pixelToCoordinates(hole, (event.getX() - main.x) / main.imageScale, (event.getY() - main.y) / main.imageScale);
+                            } else {
+                                main.x = (int) (startImage.x + event.getX() - startMove.x);
+                                main.y = (int) (startImage.y + event.getY() - startMove.y);
+                                adjustImagePosition();
+                            }
                         } else if (mode == ZOOM) {
                             float newDist = spacing(event);
                             if (newDist > 10f) {
@@ -159,6 +169,12 @@ public class CanvasView {
         int x = (int) (hole.midPixelX + (longitude - hole.midCoor.longitude) * hole.xScale);
         int y = (int) (hole.midPixelY - (latitude - hole.midCoor.latitude) * hole.yScale);
         return new Pixel(x, y);
+    }
+
+    public Coordinates pixelToCoordinates(Hole hole, double x, double y) {
+        double longitude = hole.midCoor.longitude + (x - hole.midPixelX) / hole.xScale;
+        double latitude = hole.midCoor.latitude - (y - hole.midPixelY) / hole.yScale;
+        return new Coordinates(latitude, longitude);
     }
 
     private float spacing(MotionEvent event) {
