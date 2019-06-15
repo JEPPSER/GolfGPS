@@ -102,6 +102,7 @@ public class CanvasView {
                             float newDist = spacing(event);
                             if (newDist > 10f) {
                                 float scale = newDist / oldDist;
+                                oldDist = newDist;
                                 main.imageScale *= scale;
                                 if (main.imageScale < lowerScale) {
                                     main.imageScale = lowerScale;
