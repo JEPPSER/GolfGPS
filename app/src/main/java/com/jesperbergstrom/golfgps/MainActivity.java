@@ -26,6 +26,12 @@ import com.jesperbergstrom.golfgps.view.CanvasView;
 
 import java.io.IOException;
 
+/*
+ * TODO:
+ * - Save marker position when reloading activity.
+ * - Implement scorecard.
+ */
+
 public class MainActivity extends Activity {
 
     public ImageView imageView;
@@ -70,6 +76,7 @@ public class MainActivity extends Activity {
         markerToggle = findViewById(R.id.markerToggle);
         assetManager = getAssets();
         course = new Course("rydo", assetManager);
+        currentMarker = course.holes.get(currentHoleNumber - 1).midCoor;
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         MyLocationListener locationListener = new MyLocationListener(this);
@@ -104,6 +111,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 if (currentHoleNumber < course.holes.size()) {
                     currentHoleNumber++;
+                    currentMarker = course.holes.get(currentHoleNumber - 1).midCoor;
                     changeHole();
                 }
             }
@@ -114,6 +122,7 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 if (currentHoleNumber > 1) {
                     currentHoleNumber--;
+                    currentMarker = course.holes.get(currentHoleNumber - 1).midCoor;
                     changeHole();
                 }
             }
@@ -122,9 +131,6 @@ public class MainActivity extends Activity {
 
     private void changeHole() {
         try {
-            Hole h = course.holes.get(currentHoleNumber - 1);
-            currentMarker = h.midCoor;
-
             currentHole = BitmapFactory.decodeStream(assetManager.open(course.name + "/" + currentHoleNumber + ".png"));
             imageWidth = currentHole.getWidth();
             imageHeight = currentHole.getHeight();
@@ -182,11 +188,14 @@ public class MainActivity extends Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("currentHoleNumber", currentHoleNumber);
+        outState.putDouble("markerLat", currentMarker.latitude);
+        outState.putDouble("markerLong", currentMarker.longitude);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentHoleNumber = savedInstanceState.getInt("currentHoleNumber");
+        currentMarker = new Coordinates(savedInstanceState.getDouble("markerLat"), savedInstanceState.getDouble("markerLong"));
     }
 }
