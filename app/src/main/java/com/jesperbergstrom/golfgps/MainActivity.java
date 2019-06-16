@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
@@ -23,6 +24,7 @@ import com.jesperbergstrom.golfgps.entities.Course;
 import com.jesperbergstrom.golfgps.entities.Hole;
 import com.jesperbergstrom.golfgps.location.MyLocationListener;
 import com.jesperbergstrom.golfgps.view.CanvasView;
+import com.jesperbergstrom.golfgps.view.ScorecardActivity;
 
 import java.io.IOException;
 
@@ -65,6 +67,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(this, ScorecardActivity.class);
+        startActivity(intent);
+
         imageView = findViewById(R.id.imageView);
         prevBtn = findViewById(R.id.prevBtn);
         nextBtn = findViewById(R.id.nextBtn);
