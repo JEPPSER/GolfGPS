@@ -62,6 +62,7 @@ public class Course {
                 String[] pixel = scan.nextLine().split(":")[1].split(",");
                 holes.get(i).midPixelX = Double.parseDouble(pixel[0]);
                 holes.get(i).midPixelY = Double.parseDouble(pixel[1]);
+                holes.get(i).par = Integer.parseInt(pixel[2]);
             }
             scan.close();
         } catch (IOException e) {

@@ -30,7 +30,6 @@ import java.io.IOException;
 
 /*
  * TODO:
- * - Save marker position when reloading activity.
  * - Implement scorecard.
  */
 
@@ -58,8 +57,6 @@ public class MainActivity extends Activity {
     public int y = 0;
     public double playerPosLat = 0;
     public double playerPosLong = 0;
-    public double tempPlayerLat = 56.958173;
-    public double tempPlayerLong = 13.115099;
     public int currentHoleNumber = 1;
     public Coordinates currentMarker;
 

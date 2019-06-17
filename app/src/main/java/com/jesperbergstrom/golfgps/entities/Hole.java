@@ -13,6 +13,7 @@ public class Hole {
     public double midPixelY;
 
     public int holeNumber;
+    public int par;
 
     public Hole(int holeNumber) {
         this.holeNumber = holeNumber;
