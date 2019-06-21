@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     public TextView backText;
     public ToggleButton markerToggle;
     public TextView markerText;
+    public Button scorecardBtn;
 
     public Course course;
 
@@ -60,13 +61,14 @@ public class MainActivity extends Activity {
     public int currentHoleNumber = 1;
     public Coordinates currentMarker;
 
+    public Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, ScorecardActivity.class);
-        startActivity(intent);
+        intent = new Intent(this, ScorecardActivity.class);
 
         imageView = findViewById(R.id.imageView);
         prevBtn = findViewById(R.id.prevBtn);
@@ -77,6 +79,7 @@ public class MainActivity extends Activity {
         backText = findViewById(R.id.backText);
         markerText = findViewById(R.id.markerText);
         markerToggle = findViewById(R.id.markerToggle);
+        scorecardBtn = findViewById(R.id.scorecardBtn);
         assetManager = getAssets();
         course = new Course("rydo", assetManager);
         currentMarker = course.holes.get(currentHoleNumber - 1).midCoor;
@@ -128,6 +131,13 @@ public class MainActivity extends Activity {
                     currentMarker = course.holes.get(currentHoleNumber - 1).midCoor;
                     changeHole();
                 }
+            }
+        });
+
+        scorecardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(intent);
             }
         });
     }
