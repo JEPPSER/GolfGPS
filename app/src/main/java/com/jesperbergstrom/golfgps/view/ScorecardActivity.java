@@ -167,7 +167,27 @@ public class ScorecardActivity extends Activity {
         }
 
         String contents = new String(bytes);
-        System.out.println(contents);
+        // Load scorecard
+        String[] parts = contents.split("\n");
+        if (parts.length == 8) {
+            for (int i = 0; i < parts.length; i++) {
+                int playerIndex = i;
+                if (playerIndex > 3) {
+                    playerIndex -= 4;
+                }
+                String[] holes = parts[i].split(" ");
+                if (!holes[0].equals("")) {
+                    scorecard.players[playerIndex].name = holes[0];
+                }
+                for (int j = 1; j < holes.length; j++) {
+                    if (i > 3) {
+                        scorecard.players[playerIndex].scores[j + 8] = Integer.parseInt(holes[j]);
+                    } else {
+                        scorecard.players[playerIndex].scores[j - 1] = Integer.parseInt(holes[j]);
+                    }
+                }
+            }
+        }
 
         for (int i = 2; i < 6; i++) {
             TableRow tr = (TableRow) scoreTable.getChildAt(i);
@@ -177,22 +197,57 @@ public class ScorecardActivity extends Activity {
                     et.setText(scorecard.players[i - 2].name);
                 } else if (scorecard.players[i - 2].scores[j - 1] != 0){
                     et.setText(String.valueOf(scorecard.players[i - 2].scores[j - 1]));
+                } else {
+                    et.setText("");
+                }
+            }
+        }
+
+        for (int i = 8; i < 12; i++) {
+            TableRow tr = (TableRow) scoreTable.getChildAt(i);
+            for (int j = 0; j < tr.getChildCount(); j++) {
+                EditText et = (EditText) tr.getChildAt(j);
+                if (j == 0) {
+                    et.setText(scorecard.players[i - 8].name);
+                } else if (scorecard.players[i - 8].scores[j + 8] != 0){
+                    et.setText(String.valueOf(scorecard.players[i - 8].scores[j + 8]));
+                } else {
+                    et.setText("");
                 }
             }
         }
     }
 
     private void saveScore() {
+        String output = "";
         for (int i = 2; i < 6; i++) {
             TableRow tr = (TableRow) scoreTable.getChildAt(i);
             for (int j = 0; j < tr.getChildCount(); j++) {
                 EditText et = (EditText) tr.getChildAt(j);
                 if (j == 0) {
-                    scorecard.players[i - 2].name = et.getText().toString();
-                } else if (!et.getText().toString().equals("")){
-                    scorecard.players[i - 2].scores[j - 1] = Integer.parseInt(et.getText().toString());
+                    output += et.getText().toString() + " ";
+                } else if (!et.getText().toString().equals("")) {
+                    output += et.getText().toString() + " ";
+                } else if (et.getText().toString().equals("")) {
+                    output += "0 ";
                 }
             }
+            output += "\n";
+        }
+
+        for (int i = 8; i < 12; i++) {
+            TableRow tr = (TableRow) scoreTable.getChildAt(i);
+            for (int j = 0; j < tr.getChildCount(); j++) {
+                EditText et = (EditText) tr.getChildAt(j);
+                if (j == 0) {
+                    output += et.getText().toString() + " ";
+                } else if (!et.getText().toString().equals("")) {
+                    output += et.getText().toString() + " ";
+                } else if (et.getText().toString().equals("")) {
+                    output += "0 ";
+                }
+            }
+            output += "\n";
         }
 
         File path = this.getFilesDir();
@@ -201,19 +256,10 @@ public class ScorecardActivity extends Activity {
         FileOutputStream stream;
         try {
             stream = new FileOutputStream(file);
-            stream.write("text-to-write".getBytes());
+            stream.write(output.getBytes());
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        /* for (int i = 0; i < scorecard.players.length; i++) {
-            PlayerScore player = scorecard.players[i];
-            System.out.print(player.name + " ");
-            for (int j = 0; j < player.scores.length; j++) {
-                System.out.print(player.scores[j] + " ");
-            }
-            System.out.println();
-        } */
     }
 }
