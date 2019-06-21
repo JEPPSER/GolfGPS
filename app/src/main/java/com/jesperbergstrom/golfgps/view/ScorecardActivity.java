@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.jesperbergstrom.golfgps.R;
 import com.jesperbergstrom.golfgps.entities.Course;
@@ -100,29 +101,27 @@ public class ScorecardActivity extends Activity {
             TableRow tr = new TableRow(this);
             scoreTable.addView(tr);
             for (int j = 0; j < 10; j++) {
-                EditText et = new EditText(this);
-                et.setTextSize(boxSize / 8);
-                et.setGravity(Gravity.CENTER);
+                TextView et;
                 if (i == 1 || i == 7) {
+                    et = new TextView(this);
                     et.setTypeface(null, Typeface.BOLD);
                     et.setBackgroundResource(R.drawable.par_box);
-                    et.setInputType(InputType.TYPE_NULL);
                     if (j == 0) {
                         et.setText("Par");
-                        et.setInputType(InputType.TYPE_NULL);
                     } else {
                         et.setText(String.valueOf(course.holes.get(j + 9 * (i / 6) - 1).par));
                     }
                 } else if (i == 0 || i == 6) {
+                    et = new TextView(this);
                     et.setTypeface(null, Typeface.BOLD);
                     et.setBackgroundResource(R.drawable.hole_box);
-                    et.setInputType(InputType.TYPE_NULL);
                     if (j == 0) {
                         et.setText("Hole");
                     } else {
                         et.setText(String.valueOf(j + 9 * (i / 6)));
                     }
                 } else {
+                    et = new EditText(this);
                     et.setBackgroundResource(R.drawable.score_box);
                     if (j == 0) {
                         et.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -130,6 +129,8 @@ public class ScorecardActivity extends Activity {
                         et.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
                     }
                 }
+                et.setTextSize(boxSize / 8);
+                et.setGravity(Gravity.CENTER);
                 et.setWidth(boxSize);
                 et.setHeight(boxSize);
                 tr.addView(et);
